@@ -1,11 +1,13 @@
 <template>
-  <div id="main">
-    <Befit />
-  </div>
+  <Suspense>
+    <div id="main">
+      <Befit />
+    </div>
+  </Suspense>
 </template>
 
-<script setup>
-import Befit from "./components/Befit.vue";
+<script setup lang="ts">
+  import Befit from "./components/Befit.vue";
 </script>
 
 <style scoped lang="scss">

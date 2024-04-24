@@ -1,5 +1,5 @@
 <template>
-  <div v-if="posts.length" class="Befit">
+  <div v-if="posts" class="Befit">
     <div class="Befit__main">
       <div class="Befit__list">
         <BefitItem v-for="post in postsPerFive" :key="post.id" :post="post" />
@@ -15,33 +15,61 @@
         </button>
       </div>
     </div>
+    <div class="Befit__additional">
+      <h4 class="Befit__additional_title">Понравилось</h4>
+      <Transition>
+        <div v-if="Object.keys(likedPosts).length" class="Befit__list">
+          <TransitionGroup>
+            <BefitItem v-for="post of likedPosts" :key="post.id" from-like-block :post="post" />
+          </TransitionGroup>
+        </div>
+      </Transition>
+    </div>
+    <div class="Befit__additional">
+      <h4 class="Befit__additional_title">Не понравилось</h4>
+      <Transition>
+        <div v-if="Object.keys(dislikedPosts).length" class="Befit__list">
+          <TransitionGroup>
+            <BefitItem v-for="post of dislikedPosts" :key="post.id" from-dislike-block :post="post" />
+          </TransitionGroup>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import BefitItem from "./BefitItem.vue";
-  import { computed, ref } from "vue";
+  import { computed, ref, watch } from "vue";
+  import { useBefitStore } from "@/store/useStore";
+  import { storeToRefs } from "pinia";
+  import type { BefitDto } from "@/types";
 
-  const posts = ref([]);
+  const befitStore = useBefitStore();
+  const { posts, postList, likedPosts, dislikedPosts } = storeToRefs(befitStore);
+  await befitStore.getPosts();
 
   const paginationPos = ref(0);
   const paginationLength = computed(() => {
-    return Math.ceil(posts.value.length / 5);
+    return Math.ceil(postList.value.length / 5);
   })
 
-  const postsPerFive = computed(() => {
+  const postsPerFive = computed<BefitDto[]>(() => {
     const startPos = paginationPos.value * 5;
     const endPos = startPos + 5;
 
-    return [...posts.value].slice(startPos, endPos)
+    return postList.value.slice(startPos, endPos);
   })
 
-  function setPagination(index) {
+  watch(postsPerFive, () => {
+    if (!postsPerFive.value.length) {
+      paginationPos.value = paginationPos.value - 1;
+    }
+  });
+
+  function setPagination(index: number) {
     paginationPos.value = index
   }
-
-  fetch('https://jsonplaceholder.typicode.com/posts').then(response => response.json())
-    .then((res) => posts.value = res);
 
 </script>
 
@@ -89,6 +117,44 @@
       &--active {
         color: red !important;
       }
+    }
+
+    &__additional {
+      overflow: auto;
+      padding: 0 10px 10px 10px;
+
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+      }
+    }
+
+    &__additional_title {
+      margin: 0 0 10px 0;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: white;
+    }
+  }
+</style>
+<style lang="scss">
+  .Befit {
+    .v-enter-active,
+    .v-leave-active {
+      transition: opacity 0.5s ease;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+      opacity: 0;
     }
   }
 </style>

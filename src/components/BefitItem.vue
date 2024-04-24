@@ -3,25 +3,45 @@
     <span class="BefitItem__id">{{ post.id }}</span>
     <h5 class="BefitItem__title">{{ post.title }}</h5>
     <div class="BefitItem__icons">
-      <button type="button" class="BefitItem__button BefitItem__button--like" />
-      <button type="button" class="BefitItem__button BefitItem__button--dislike" />
+      <button v-if="!fromDislikeBlock" type="button"
+              class="BefitItem__button BefitItem__button--like"
+              :class="[`BefitItem__button--like`,
+                      { 'BefitItem__button--active': fromLikeBlock }]"
+              @click="befitStore.toggleLikePost(post.id)"
+      />
+      <button v-if="!fromLikeBlock" type="button"
+              class="BefitItem__button BefitItem__button--like"
+              :class="[`BefitItem__button--dislike`,
+                      { 'BefitItem__button--active': fromDislikeBlock }]"
+              @click="befitStore.toggleDislikePost(post.id)"
+      />
     </div>
     <p class="BefitItem__content">{{ post.body }}</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { defineProps } from "vue";
+  import { defineProps, withDefaults } from "vue";
+  import { useBefitStore } from "@/store/useStore";
+  import type { BefitDto } from "@/types";
 
-  const props = defineProps<{
-    post: any
-  }>()
+  withDefaults(defineProps<{
+    post: BefitDto,
+    fromLikeBlock?: boolean,
+    fromDislikeBlock?: boolean,
+  }>(), {
+    fromLikeBlock: false,
+    fromDislikeBlock: false,
+  });
+
+  const befitStore = useBefitStore();
+  
 </script>
 
 <style lang="scss" scoped>
   .BefitItem {
     display: grid;
-    grid-template-columns: 15px 1fr 50px;
+    grid-template-columns: 20px 1fr fit-content(100%);
     gap: 10px;
     height: fit-content;
     width: 100%;
@@ -35,7 +55,6 @@
     }
 
     &__id {
-      // padding-top: 5px;
       font-size: 14px;
       line-height: 18px;
     }
@@ -56,12 +75,12 @@
 
     &__content {
       text-align: left;
-      font-size: 14px;
-      line-height: 21px;
       grid-column: 1 / 4;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: 14px;
+      line-height: 21px;
     }
 
     &__button {
@@ -70,17 +89,28 @@
       height: 20px;
       mask-repeat: no-repeat;
       cursor: pointer;
+      transition: 0.3s ease-in-out background-color;
 
       &--like {
         mask-image: url("../assets/like-button-icon.svg");
       }
 
+      &--active {
+        transition: none;
+      }
+
+      &--like:hover,
       &--active:is(&--like) {
         background-color: green;
       }
 
       &--dislike {
         mask-image: url("../assets/dislike-button-icon.svg");
+      }
+
+      &--dislike:hover,
+      &--active:is(&--dislike) {
+        background-color: red;
       }
     }
   }
