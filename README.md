@@ -1,5 +1,7 @@
 # befit
 
+Для добавления/удаления в/из 'Понравилось'/'Не понравилось' необходимо кликать по пальцу вверх/вниз
+
 ## Project setup
 ```
 yarn install
@@ -20,5 +22,3 @@ yarn build
 yarn lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

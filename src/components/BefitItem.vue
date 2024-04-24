@@ -5,14 +5,12 @@
     <div class="BefitItem__icons">
       <button v-if="!fromDislikeBlock" type="button"
               class="BefitItem__button BefitItem__button--like"
-              :class="[`BefitItem__button--like`,
-                      { 'BefitItem__button--active': fromLikeBlock }]"
+              :class="[{ 'BefitItem__button--active': fromLikeBlock }]"
               @click="befitStore.toggleLikePost(post.id)"
       />
       <button v-if="!fromLikeBlock" type="button"
-              class="BefitItem__button BefitItem__button--like"
-              :class="[`BefitItem__button--dislike`,
-                      { 'BefitItem__button--active': fromDislikeBlock }]"
+              class="BefitItem__button BefitItem__button--dislike"
+              :class="[{ 'BefitItem__button--active': fromDislikeBlock }]"
               @click="befitStore.toggleDislikePost(post.id)"
       />
     </div>
