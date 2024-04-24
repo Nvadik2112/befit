@@ -1,5 +1,6 @@
 <template>
-  <div class="BefitItem">
+  <div class="BefitItem" style="position: relative">
+    <span class="BefitItem__id">{{ post.id }}</span>
     <h5 class="BefitItem__title">{{ post.title }}</h5>
     <div class="BefitItem__icons">
       <button type="button" class="BefitItem__button BefitItem__button--like" />
@@ -20,7 +21,7 @@
 <style lang="scss" scoped>
   .BefitItem {
     display: grid;
-    grid-template-columns: 1fr 50px;
+    grid-template-columns: 15px 1fr 50px;
     gap: 10px;
     height: fit-content;
     width: 100%;
@@ -31,6 +32,12 @@
     * {
       padding: 0;
       margin: 0;
+    }
+
+    &__id {
+      // padding-top: 5px;
+      font-size: 14px;
+      line-height: 18px;
     }
 
     &__title {
@@ -51,7 +58,7 @@
       text-align: left;
       font-size: 14px;
       line-height: 21px;
-      grid-column: 1 / 3;
+      grid-column: 1 / 4;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
