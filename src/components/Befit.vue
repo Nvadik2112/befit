@@ -1,5 +1,5 @@
 <template>
-  <div v-if="posts" class="Befit">
+  <div v-if="postList.length" class="Befit">
     <div class="Befit__main">
       <div class="Befit__list">
         <BefitItem v-for="post in postsPerFive" :key="post.id" :post="post" />
@@ -46,7 +46,7 @@
   import type { BefitDto } from "@/types";
 
   const befitStore = useBefitStore();
-  const { posts, postList, likedPosts, dislikedPosts } = storeToRefs(befitStore);
+  const { postList, likedPosts, dislikedPosts } = storeToRefs(befitStore);
   await befitStore.getPosts();
 
   const paginationPos = ref(0);
