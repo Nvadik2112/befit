@@ -1,5 +1,5 @@
 <template>
-  <div class="BefitItem" style="position: relative">
+  <div class="BefitItem">
     <span class="BefitItem__id">{{ post.id }}</span>
     <h5 class="BefitItem__title">{{ post.title }}</h5>
     <div class="BefitItem__icons">
